@@ -17,11 +17,10 @@ sudo apt-get install terraform
 ---
 terraform plan
 terraform apply
-aws ssm start-session --target i-0b88d294d71b14c12
-3. login to host, install docker, eksctl tool
+aws ssm start-session --target i-05c6bdab760f1c178
+1. login to host, install docker, eksctl tool
 --- ubuntu---
-screen
-screen -ls
+sscreen -ls
 screen -r
 for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
 # Add Docker's official GPG key:
