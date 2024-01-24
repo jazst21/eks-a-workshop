@@ -1,4 +1,4 @@
-1. cloud9
+1. cloud9 on default vpc
 2. install terraform, create host vm using terraform
 --terraform--
 https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
@@ -14,7 +14,6 @@ https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
 sudo tee /etc/apt/sources.list.d/hashicorp.list
 sudo apt update
 sudo apt-get install terraform
----
 terraform plan
 terraform apply
 --- ubuntu--- 1. login to host, install docker, eksctl tool
@@ -77,17 +76,20 @@ kubectl get ns
 kubectl apply -f "https://anywhere.eks.amazonaws.com/manifests/hello-eks-a.yaml"
 ---Deploy test workload, duplicate tab and login
 sudo su
+curl -LO "https://anywhere.eks.amazonaws.com/manifests/hello-eks-a.yaml"
 kubectl apply -f "https://anywhere.eks.amazonaws.com/manifests/hello-eks-a.yaml"
 kubectl get pods -l app=hello-eks-a
 kubectl logs -l app=hello-eks-a
 kubectl port-forward deploy/hello-eks-a 8000:80
 curl localhost:8000
+---from internet
+iptables -t nat -L
+iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8000
 ---helm
 sudo su
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
 ./get_helm.sh
 ---MetalLB Configuration
-
 
 
 
