@@ -1,9 +1,13 @@
 
 ## 1. cloud9 on default vpc
-//create or use existing cloud9 to initiate terraform creating host node for eks-a
+
+> create or use existing cloud9 to initiate terraform creating host node
+> for eks-a
+
 ## 2. install terraform, create host vm using terraform
 --terraform--
-https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
+
+> https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
 
     sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
 
@@ -30,7 +34,8 @@ https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
     screen -ls
     screen -r
     for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
-//Add Docker's official GPG key:
+
+> Add Docker's official GPG key:
 
     sudo apt-get update
     sudo apt-get install ca-certificates curl gnupg
@@ -38,7 +43,7 @@ https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
     sudo chmod a+r /etc/apt/keyrings/docker.gpg
 
-//Add the repository to Apt sources:
+> Add the repository to Apt sources:
 
     echo \
     "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
@@ -82,7 +87,7 @@ https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
     reboot now
     docker info | grep Cgroup
 
-// if using docker-ce on macos
+> if using docker-ce on macos
 
     sudo sysctl -w kern.maxfiles=524288
 
@@ -103,9 +108,10 @@ https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
     kubectl get ns
 
 ## 11 ---Connect EKS-A using local access (kubectl on macos)
-//install kubectl on local macos machine
-//copy kubeconfig file to local
-add insecure-skip-tls-verify: true into the yaml
+
+> install kubectl on local macos machine.
+> copy kubeconfig file to local.  
+> add insecure-skip-tls-verify: true into the yaml.
 
     apiVersion: v1
     clusters:
@@ -113,7 +119,7 @@ add insecure-skip-tls-verify: true into the yaml
     		server: https://54.86.12.105:32768
     		insecure-skip-tls-verify: true
 
-//
+> Or manually set the kubectl context (Cluster server configurations)
 
     kubectl config set-cluster mgmt --server=http://54.86.12.105:32769
     kubectl config use-context mgmt
@@ -135,8 +141,14 @@ add insecure-skip-tls-verify: true into the yaml
 
 ## 13 ---Access kubectl and proxied services from internet
 
-using aws console, open port 32768 for kubernetes, because we dont have BGP router speaker for metalLB
-## 14 --- Helm
+> using aws console, open port 32768 for kubernetes, because we dont
+> have BGP router speaker for metalLB
+
+    kubectl get nodes
+    kubectl get ns
+    kubectl get all -A
+
+## 14 --- Deployment using Helm
 
     sudo su
     curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
@@ -150,76 +162,29 @@ using aws console, open port 32768 for kubernetes, because we dont have BGP rout
     curl http://172.18.0.5:31994/
     kubectl port-forward service/apache 8000:80
 
----curated packages
+## 15 --- Installing curated packages
 
-https://anywhere.eks.amazonaws.com/docs/packages/prereq/
+> https://anywhere.eks.amazonaws.com/docs/packages/prereq/
 
-eksctl anywhere list packages --kube-version 1.28
-
-kubectl get all -A
-
-export CLUSTER_NAME=mgmt
-
-eksctl anywhere generate package harbor --cluster ${CLUSTER_NAME} --kube-version 1.28 > harbor-spec.yaml
-
-cat harbor-spec.yaml
-
-  
+    eksctl anywhere list packages --kube-version 1.28
+    kubectl get all -A
+    export CLUSTER_NAME=mgmt
+    eksctl anywhere generate package harbor --cluster ${CLUSTER_NAME} --kube-version 1.28 > harbor-spec.yaml
+    cat harbor-spec.yaml
 
 ---MetalLB Configuration
 
-  
-  
-  
-  
-  
-  
+## --- Troubleshooting ---
 
----troubleshoot---
+> delete cluster
 
-//delete cluster
+    docker ps | grep "${CLUSTER_NAME}-eks-a-cluster-control-plane" | awk '{ print $1 }' | xargs docker rm -f
 
-docker ps | grep "${CLUSTER_NAME}-eks-a-cluster-control-plane" | awk '{ print $1 }' | xargs docker rm -f
+> add context to kubectl
 
-//add context to kubectl
-
-kubectl config view
-
-sudo kubectl config set-context mgmt-admin@mgmt --namespace=default --cluster=mgmt --user=mgmt-admin
-
-sudo kubectl config use-context mgmt-admin@mgmt
-
-kubectl config set-cluster mgmt
-
---proxy-url=my-proxy-url
-
-kubectl config get-contexts
-
-----
-
-1. download necessary packages
-
-2. generate cluster config, install cluster
-
-3. install packages
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    kubectl config view
+    sudo kubectl config set-context mgmt-admin@mgmt --namespace=default --cluster=mgmt --user=mgmt-admin
+    sudo kubectl config use-context mgmt-admin@mgmt
+    kubectl config set-cluster mgmt
+    kubectl config get-contexts
 
