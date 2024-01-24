@@ -184,6 +184,7 @@
 > you cannot pull the images unless has subscriptions credentials
     eksctl anywhere delete packages my-harbor --cluster mgmt
 > lets try creating it via opensource non curated packages
+
     helm repo list
     helm install harbor-2 oci://registry-1.docker.io/bitnamicharts/harbor -n harbor-2
     helm list -n harbor-2
@@ -193,8 +194,8 @@
 
 ![enter image description here](/images/curated-packages-avail.png)
 ![enter image description here](/images/packages-harbor.png)
----MetalLB Configuration
---- EKS-A connect to AWS region
+##### --- MetalLB Configuration
+##### --- EKS-A connect to AWS region
 
 ## --- Troubleshooting ---
 
@@ -209,5 +210,7 @@
     sudo kubectl config use-context mgmt-admin@mgmt
     kubectl config set-cluster mgmt
     kubectl config get-contexts
+
+
 
 
