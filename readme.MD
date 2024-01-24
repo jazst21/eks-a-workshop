@@ -140,7 +140,7 @@
     kubectl port-forward deploy/hello-eks-a 8000:80
     curl localhost:8000
     kubectl get deploy/hello-eks-a -o yaml > hello-eks-a.yaml
-
+![enter image description here](/images/sample-app-host.png)
 ## 13 ---Access kubectl and proxied services from internet
 
 > using aws console, open port 32768 for kubernetes, because we dont
