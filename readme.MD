@@ -21,14 +21,14 @@ sudo su
 sscreen -ls
 screen -r
 for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
-# Add Docker's official GPG key:
+//Add Docker's official GPG key:
 sudo apt-get update
 sudo apt-get install ca-certificates curl gnupg
 sudo install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 sudo chmod a+r /etc/apt/keyrings/docker.gpg
 
-# Add the repository to Apt sources:
+//Add the repository to Apt sources:
 echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
   $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
@@ -71,24 +71,49 @@ eksctl anywhere generate clusterconfig $CLUSTER_NAME \
 ---createCluster---
 eksctl anywhere create cluster -f $CLUSTER_NAME.yaml
 --- connect eks-a
+CLUSTER_NAME=mgmt
 export KUBECONFIG=${PWD}/${CLUSTER_NAME}/${CLUSTER_NAME}-eks-a-cluster.kubeconfig
 kubectl get ns
-kubectl apply -f "https://anywhere.eks.amazonaws.com/manifests/hello-eks-a.yaml"
+---local access
+//copy kubeconfig file to local
+add insecure-skip-tls-verify: true
+kubectl config set-cluster  mgmt --server=http://54.86.12.105:32769
+kubectl config use-context mgmt
+kubectl config view
+export KUBECONFIG=/Users/pugarjay/git/work/eks-a/eks-a-workshop/config
+kubectl get all
 ---Deploy test workload, duplicate tab and login
 sudo su
+kubectl apply -f "https://anywhere.eks.amazonaws.com/manifests/hello-eks-a.yaml"
 curl -LO "https://anywhere.eks.amazonaws.com/manifests/hello-eks-a.yaml"
 kubectl apply -f "https://anywhere.eks.amazonaws.com/manifests/hello-eks-a.yaml"
 kubectl get pods -l app=hello-eks-a
 kubectl logs -l app=hello-eks-a
 kubectl port-forward deploy/hello-eks-a 8000:80
 curl localhost:8000
+kubectl get deploy/hello-eks-a -o yaml > hello-eks-a.yaml
 ---from internet
-iptables -t nat -L
-iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8000
+open port 32768 for kubernetes, because we dont have BGP router speaker for metalLB
 ---helm
 sudo su
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
 ./get_helm.sh
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo list
+helm install apache bitnami/apache --set service.type=NodePort
+export NODE_PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services apache)
+export NODE_IP=$(kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}")
+echo http://$NODE_IP:$NODE_PORT/
+curl http://172.18.0.5:31994/
+kubectl port-forward service/apache 8000:80 --insecure-skip-tls-verify=true
+---curated packages
+https://anywhere.eks.amazonaws.com/docs/packages/prereq/
+eksctl anywhere list packages --kube-version 1.28
+kubectl get all -A
+export CLUSTER_NAME=mgmt
+eksctl anywhere generate package harbor --cluster ${CLUSTER_NAME} --kube-version 1.28 > harbor-spec.yaml
+cat harbor-spec.yaml
+
 ---MetalLB Configuration
 
 

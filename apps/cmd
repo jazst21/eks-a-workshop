@@ -1,0 +1,4 @@
+npm init
+npm install express
+docker build -t my-nodejs-app .
+docker run -p 3000:3000 -d my-nodejs-app
