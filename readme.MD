@@ -181,6 +181,9 @@
     eksctl anywhere get packages --cluster mgmt
     eksctl anywhere create packages -f harbor-spec.yaml
     eksctl anywhere get packages --cluster mgmt
+
+![enter image description here](/images/curated-packages-avail.png)
+![enter image description here](/images/packages-harbor.png)
 > you cannot pull the images unless has subscriptions credentials
     eksctl anywhere delete packages my-harbor --cluster mgmt
 > lets try creating it via opensource non curated packages
@@ -192,8 +195,10 @@
     echo Password: $(kubectl get secret --namespace harbor-2 harbor-2-core-envvars -o jsonpath="{.data.HARBOR_ADMIN_PASSWORD}" | base64 -d)
     kubectl port-forward service/harbor-2-portal  8000:80 -n harbor-2
 
-![enter image description here](/images/curated-packages-avail.png)
-![enter image description here](/images/packages-harbor.png)
+> we can login into the harbor package portal
+
+![enter image description here](images/harbor-portal.png)
+
 ##### --- MetalLB Configuration
 ##### --- EKS-A connect to AWS region
 
