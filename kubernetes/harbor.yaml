@@ -1,0 +1,13 @@
+apiVersion: packages.eks.amazonaws.com/v1alpha1
+kind: Package
+metadata:
+   name: my-harbor
+   namespace: eksa-packages-mgmt
+spec:
+   packageName: harbor
+   config: |-
+      secretKey: "secretkey"
+      externalURL: http://harbor.eksa.demo:30002
+      expose:
+         tls:
+            enabled: false

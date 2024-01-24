@@ -172,9 +172,16 @@
     eksctl anywhere list packages --kube-version 1.28
     kubectl get all -A
     export CLUSTER_NAME=mgmt
+    export KUBECONFIG=${PWD}/${CLUSTER_NAME}/${CLUSTER_NAME}-eks-a-cluster.kubeconfig
     eksctl anywhere generate package harbor --cluster ${CLUSTER_NAME} --kube-version 1.28 > harbor-spec.yaml
-    cat harbor-spec.yaml
+    vi harbor-spec.yaml
+    #copy harbour.yaml to harbor-spec.yaml
+    eksctl anywhere get packages --cluster mgmt
+    eksctl anywhere create packages -f harbor-spec.yaml
+    eksctl anywhere get packages --cluster mgmt
+
 ![enter image description here](/images/curated-packages-avail.png)
+![enter image description here](/images/packages-harbor.png)
 ---MetalLB Configuration
 
 ## --- Troubleshooting ---
@@ -190,4 +197,5 @@
     sudo kubectl config use-context mgmt-admin@mgmt
     kubectl config set-cluster mgmt
     kubectl config get-contexts
+
 
