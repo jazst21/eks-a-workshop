@@ -100,13 +100,15 @@
 ## 9 ---createCluster---
 
     eksctl anywhere create cluster -f $CLUSTER_NAME.yaml
-
+![enter image description here](/images/install-finished.png)
 ## 10 --- Connect EKS-A from host
 
     CLUSTER_NAME=mgmt
     export KUBECONFIG=${PWD}/${CLUSTER_NAME}/${CLUSTER_NAME}-eks-a-cluster.kubeconfig
     kubectl get ns
-
+    kubectl get all -A
+![enter image description here](/images/install-kubectl-ns.png)
+![enter image description here](/images/install-kubectl-all.png)
 ## 11 ---Connect EKS-A using local access (kubectl on macos)
 
 > install kubectl on local macos machine.
@@ -147,7 +149,8 @@
     kubectl get nodes
     kubectl get ns
     kubectl get all -A
-
+    kubectl port-forward deploy/hello-eks-a 8000:80
+![eks-a sample app on proxy internet ](/images/eks-a-sample-app.png)
 ## 14 --- Deployment using Helm
 
     sudo su
@@ -171,7 +174,7 @@
     export CLUSTER_NAME=mgmt
     eksctl anywhere generate package harbor --cluster ${CLUSTER_NAME} --kube-version 1.28 > harbor-spec.yaml
     cat harbor-spec.yaml
-
+![enter image description here](/images/curated-packages-avail.png)
 ---MetalLB Configuration
 
 ## --- Troubleshooting ---
