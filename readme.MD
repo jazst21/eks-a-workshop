@@ -1,8 +1,8 @@
-1. cloud9 on default vpc
-2. install terraform, create host vm using terraform
---terraform--
-https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
-sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
+## 1. cloud9 on default vpc
+## 2. install terraform, create host vm using terraform
+--terraform--  
+https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli  
+sudo apt-get update && sudo apt-get install -y gnupg software-properties-common  
 wget -O- https://apt.releases.hashicorp.com/gpg | \
 gpg --dearmor | \
 sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
@@ -16,7 +16,7 @@ sudo apt update
 sudo apt-get install terraform
 terraform plan
 terraform apply
---- ubuntu--- 1. login to host, install docker, eksctl tool
+--- ubuntu--- 1. login to host, install docker, eksctl tool  
 sudo su
 sscreen -ls
 screen -r
