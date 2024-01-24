@@ -177,9 +177,19 @@
     eksctl anywhere generate package harbor --cluster ${CLUSTER_NAME} --kube-version 1.28 > harbor-spec.yaml
     vi harbor-spec.yaml
     #copy harbour.yaml to harbor-spec.yaml
+    kubectl create ns harbor
     eksctl anywhere get packages --cluster mgmt
     eksctl anywhere create packages -f harbor-spec.yaml
     eksctl anywhere get packages --cluster mgmt
+> you cannot pull the images unless has subscriptions credentials
+    eksctl anywhere delete packages my-harbor --cluster mgmt
+> lets try creating it via opensource non curated packages
+    helm repo list
+    helm install harbor-2 oci://registry-1.docker.io/bitnamicharts/harbor -n harbor-2
+    helm list -n harbor-2
+    kubectl get all -n harbor-2
+    echo Password: $(kubectl get secret --namespace harbor-2 harbor-2-core-envvars -o jsonpath="{.data.HARBOR_ADMIN_PASSWORD}" | base64 -d)
+    kubectl port-forward service/harbor-2-portal  8000:80 -n harbor-2
 
 ![enter image description here](/images/curated-packages-avail.png)
 ![enter image description here](/images/packages-harbor.png)

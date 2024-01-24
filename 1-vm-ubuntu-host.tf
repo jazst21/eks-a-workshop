@@ -131,7 +131,7 @@ resource "aws_instance" "my_instance" {
               EOF
 
   root_block_device {
-    volume_size = 100
+    volume_size = 500
   }
 
   tags = {
@@ -143,7 +143,7 @@ resource "aws_instance" "my_instance" {
 
 resource "aws_ebs_volume" "extra_volume" {
   availability_zone = aws_instance.my_instance.availability_zone
-  size              = 200
+  size              = 300
   type              = "gp2" # General Purpose SSD
 
   tags = {

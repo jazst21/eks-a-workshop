@@ -1,0 +1,31 @@
+pugarjay@682f678c4138 eks-a-workshop %     helm install harbor-2 oci://registry-1.docker.io/bitnamicharts/harbor -n harbor-2
+
+WARNING: Kubernetes configuration file is group-readable. This is insecure. Location: /Users/pugarjay/git/work/eks-a/eks-a-workshop/config
+WARNING: Kubernetes configuration file is world-readable. This is insecure. Location: /Users/pugarjay/git/work/eks-a/eks-a-workshop/config
+Pulled: registry-1.docker.io/bitnamicharts/harbor:19.4.0
+Digest: sha256:cac4d94be5bd5a1e6199680740e6c3614b22b1d9473201b405ce4b03769e57ca
+NAME: harbor-2
+LAST DEPLOYED: Thu Jan 25 04:09:30 2024
+NAMESPACE: harbor-2
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+CHART NAME: harbor
+CHART VERSION: 19.4.0
+APP VERSION: 2.10.0
+
+** Please be patient while the chart is being deployed **
+
+1. Get the Harbor URL:
+
+  NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+        Watch the status with: 'kubectl get svc --namespace harbor-2 -w harbor-2'
+    export SERVICE_IP=$(kubectl get svc --namespace harbor-2 harbor-2 --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+    echo "Harbor URL: http://$SERVICE_IP/"
+
+2. Login with the following credentials to see your Harbor application
+
+  echo Username: "admin"
+  echo Password: $(kubectl get secret --namespace harbor-2 harbor-2-core-envvars -o jsonpath="{.data.HARBOR_ADMIN_PASSWORD}" | base64 -d)
+pugarjay@682f678c4138 eks-a-workshop % 
