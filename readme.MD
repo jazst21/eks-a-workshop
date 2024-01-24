@@ -112,8 +112,9 @@
 ## 11 ---Connect EKS-A using local access (kubectl on macos)
 
 > install kubectl on local macos machine.
-> copy kubeconfig file to local.  
+> copy kubeconfig file to local kubeconfig file.  
 > add insecure-skip-tls-verify: true into the yaml.
+> change the control plane  from 127/localhost into correct public ip address:port
 
     apiVersion: v1
     clusters:
@@ -183,6 +184,7 @@
 ![enter image description here](/images/curated-packages-avail.png)
 ![enter image description here](/images/packages-harbor.png)
 ---MetalLB Configuration
+--- EKS-A connect to AWS region
 
 ## --- Troubleshooting ---
 
